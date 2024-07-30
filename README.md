@@ -34,4 +34,3 @@ For questions or suggestions, please contact [Itisha](mailto:itishachovatiya7096
 ---
 
 Thank you for using our Book E-commerce Website!
-
