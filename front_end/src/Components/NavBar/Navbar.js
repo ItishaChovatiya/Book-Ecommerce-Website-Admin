@@ -48,7 +48,7 @@ const Navbar = () => {
         <nav className='z-50 relative flex bg-zinc-800 text-white px-8 py-4 items-center justify-between'>
       <Link to="/" className='flex items-center'>
       <img src='asset/img/book.png' alt='logo' className='h-14 me-4'></img>
-        <h1 className='text-2xl font-semibold'>BooksHeaven</h1>
+        <h1 className='text-2xl '>BooksHeaven</h1>
     </Link>
       <div className='nav-links-bookheaven block md:flex items-center gap-4'>
         <div className='hidden md:flex gap-4'>
