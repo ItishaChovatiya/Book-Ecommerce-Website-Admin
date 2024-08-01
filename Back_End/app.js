@@ -1,33 +1,29 @@
-// const express = require("express")
-// const connectDB = require("./Connection/Connection")
-// const cors = require("cors")
-// const user = require("./Routes/index")
+const express = require("express");
+const connectDB = require("./Connection/Connection");
+const cors = require("cors");
+const userRoutes = require("./Routes/index");
+require("dotenv").config();
 
-// const app = express()
-// require("dotenv").config()
+const app = express();
 
-// app.listen(process.env.PORT,()=>{
-//     console.log(`Server is running on port ${process.env.PORT}`)
-// })
-// app.use(cors())
-// app.use(express.json())
-// app.use("/v1",user)
-// connectDB()
+// Middleware
+app.use(cors());
+app.use(express.json());
 
-const express = require("express")
-const connectDB = require("./Connection/Connection")
-const cors = require("cors")
-const user = require("./Routes/index")
-require("dotenv").config()
+// Routes
+app.use("/v1", userRoutes);
 
-const app = express()
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: "Something went wrong" });
+});
 
-app.use(cors())
-app.use(express.json())
-app.use("/v1", user)
+// Connect to Database
+connectDB();
 
-connectDB()
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`)
-})
+// Start Server
+const PORT = process.env.PORT || 5000; // Fallback to port 5000 if PORT is not defined
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

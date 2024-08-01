@@ -1,47 +1,59 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const user_Schema = mongoose.Schema(
+const userSchema = mongoose.Schema(
     {
-        username :{
-            type : String,
-            trim : true
+        username: {
+            type: String,
+            trim: true,
+            required: true, // Ensure username is provided
         },
-        email :{
-            type : String,
-            trim : true
+        email: {
+            type: String,
+            trim: true,
+            required: true, // Ensure email is provided
+            unique: true, // Ensure email is unique
+            match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // Basic email validation
         },
-        password :{
-            type : String,
-            trim : true
+        password: {
+            type: String,
+            trim: true,
+            required: true, // Ensure password is provided
         },
-        address:{
-            type : String,
-            trim : true
+        address: {
+            type: String,
+            trim: true,
         },
-        user_avtar:{
-            type : String,
-            default : "https://cdn-icons-png.flaticon.com/128/3177/3177440.png"
-            },
-            role :{
-                type : String,
-                default : "user",
-                enum : ["user","admin"]
-                },
-            favorites : [{
-                    type : mongoose.Types.ObjectId,
-                    ref : "books"     
-                }],
-                cart : [{
-                    type : mongoose.Types.ObjectId,
-                    ref : "books"     
-                }],
-                orders : [{
-                    type : mongoose.Types.ObjectId,
-                    ref : "order"     
-                }]
+        userAvatar: {
+            type: String,
+            default: "https://cdn-icons-png.flaticon.com/128/3177/3177440.png",
+        },
+        role: {
+            type: String,
+            default: "user",
+            enum: ["user", "admin"],
+        },
+        favorites: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: "Book", // Ensure this matches the book model name
+            }
+        ],
+        cart: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: "Book", // Ensure this matches the book model name
+            }
+        ],
+        orders: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: "Order", // Ensure this matches the order model name
+            }
+        ],
     },
     {
-        timestamps : true
-    })
+        timestamps: true,
+    }
+);
 
-    module.exports = mongoose.model("user",user_Schema)
+module.exports = mongoose.model("User", userSchema); // Use singular "User"
