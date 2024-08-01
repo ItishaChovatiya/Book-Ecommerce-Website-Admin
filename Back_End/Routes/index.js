@@ -1,18 +1,21 @@
-const express = require("express")
-const user_router = require("./user_routes")
-const book_router = require("./book_routes")
-const fav_router = require("./favourites")
-const cart_router = require("./cart_route")
-const order_router = require("./order_routes")
+const express = require("express");
 
+// Import route handlers
+const userRouter = require("./user_routes");
+const bookRouter = require("./book_routes");
+const favRouter = require("./favourites");
+const cartRouter = require("./cart_route");
+const orderRouter = require("./order_routes");
 
+// Create an Express router instance
+const router = express.Router(); // Use express.Router() for creating a router
 
-const router = express()
+// Define route prefixes
+router.use("/user", userRouter); // Prefix for user-related routes
+router.use("/book", bookRouter); // Prefix for book-related routes
+router.use("/fav", favRouter);   // Prefix for favorites-related routes
+router.use("/cart", cartRouter); // Prefix for cart-related routes
+router.use("/order", orderRouter); // Prefix for order-related routes
 
-router.use("/link",user_router)
-router.use("/book",book_router)
-router.use("/fav",fav_router)
-router.use("/cart",cart_router)
-router.use("/order",order_router)
-
-module.exports = router
+// Export the router
+module.exports = router;

@@ -1,34 +1,39 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const book_schema = mongoose.Schema(
+const bookSchema = mongoose.Schema(
     {
-        url:{
+        url: {
             type: String,
-            trim: true
+            trim: true,
+            required: true, // Ensure URL is provided
         },
-        title:{
+        title: {
             type: String,
-            trim: true
+            trim: true,
+            required: true, // Ensure title is provided
         },
-        author:{
+        author: {
             type: String,
-            trim: true
+            trim: true,
+            required: true, // Ensure author is provided
         },
-        price:{
+        price: {
             type: Number,
-            trim: true
+            required: true, // Ensure price is provided
+            min: 0, // Price should be a positive number
         },
-        description:{
+        description: {
             type: String,
-            trim: true
+            trim: true,
         },
-        language:{
+        language: {
             type: String,
-            trim: true
+            trim: true,
         }
     },
     {
-        timestamps: true
-    })
+        timestamps: true,
+    }
+);
 
-    module.exports = mongoose.model("books",book_schema)
+module.exports = mongoose.model("Book", bookSchema); // Use singular "Book"

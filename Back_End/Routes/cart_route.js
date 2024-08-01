@@ -1,75 +1,78 @@
-const express = require("express")
-const user = require("../Models/User")
-const {authenticateToken} = require("./userAuth")
+const express = require("express");
+const User = require("../Models/User");
+const { authenticateToken } = require("./userAuth");
 
-const cart_router = express.Router()
+const cartRouter = express.Router();
 
-//add to cart
-cart_router.put("/add-book", authenticateToken , async(req, res) => {
+// Add a book to the cart
+cartRouter.put("/add-book", authenticateToken, async (req, res) => {
     try {
-        const { bookid, id } = req.headers
-        const userData = await user.findById(id)
-        const bookinCart = userData.cart.includes(bookid)
-        if(bookinCart){
+        const { bookid } = req.headers;
+        const userId = req.user.id; // Use authenticated user ID from middleware
+
+        // Find the user and check if the book is already in the cart
+        const userData = await User.findById(userId);
+        const bookInCart = userData.cart.includes(bookid);
+        if (bookInCart) {
             return res.status(200).json({
-                success:true,
+                success: true,
                 message: "Book is already in cart"
-            })
+            });
         }
-        await user.findByIdAndUpdate(id,{$push:{ cart: bookid}})
+
+        // Add the book to the cart
+        await User.findByIdAndUpdate(userId, { $push: { cart: bookid } });
         return res.status(200).json({
-            success:true,
+            success: true,
             message: "Book added to cart"
-        })
+        });
     } catch (error) {
         res.status(500).json({
             success: false,
             message: error.message
-        })
+        });
     }
-}
-)
+});
 
-// //remove from cart
-cart_router.put("/remove-book/:bookid", authenticateToken , async(req, res) => {
+// Remove a book from the cart
+cartRouter.put("/remove-book/:bookid", authenticateToken, async (req, res) => {
     try {
-        const { id } = req.params
-        const { bookid } = req.headers
-        await user.findByIdAndUpdate(id,{$pull:{ cart: bookid}})
-       
-            return res.status(200).json({
-                status:"success",
-                message: "Book removed from cart"
-            })
-    
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        })
-    }
-}
-)
+        const { bookid } = req.params;
+        const userId = req.user.id; // Use authenticated user ID from middleware
 
-//get a cart of particular user
-cart_router.get("/get-user-cart", authenticateToken , async(req, res) => {
-    try {
-        const { id } = req.headers
-        const userData = await user.findById(id).populate("cart")
-        const cart = userData.cart.reverse()
+        // Remove the book from the cart
+        await User.findByIdAndUpdate(userId, { $pull: { cart: bookid } });
         return res.status(200).json({
-                status:"success",
-                data: cart
-            })
-    
+            success: true,
+            message: "Book removed from cart"
+        });
     } catch (error) {
         res.status(500).json({
             success: false,
             message: error.message
-        })
+        });
     }
-}
-)
+});
 
+// Get the cart for a particular user
+cartRouter.get("/get-user-cart", authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.id; // Use authenticated user ID from middleware
 
-module.exports = cart_router
+        // Retrieve user data and populate cart with book details
+        const userData = await User.findById(userId).populate("cart");
+        const cart = userData.cart.reverse(); // Optional: reverse to show the most recent items first
+
+        return res.status(200).json({
+            success: true,
+            data: cart
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+module.exports = cartRouter;
